@@ -170,7 +170,7 @@ Query EM-JS layer for setting by index.
 
 <br>
 
-# struct `ProjectM` {#structProjectM}
+# struct `ProjectM`
 
 ## Summary
 
