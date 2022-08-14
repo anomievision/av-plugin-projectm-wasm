@@ -4,8 +4,6 @@
 #include <libprojectM/projectM.h>
 
 Settings::Settings() {
-  // Log::Trace("Hello, Blaque!");
-
   for (int i = 0; i <= 19; i++) {
     Settings::Query(i);
   }

@@ -1,6 +1,6 @@
 /*
  *--------------------------------------------------------------------
- * AnomieVision | Plugin | ProjectM | Library
+ * AnomieVision | Plugin | ProjectM | WASM
  *--------------------------------------------------------------------
  */
 
@@ -79,7 +79,6 @@ void initSettings() {
   projectm.settings.menu_font_url = settings._options.menu_font_path;
 }
 
-
 /*
  *--------------------------------------------------------------------
  * Audio
@@ -106,7 +105,6 @@ void generateRandomAudioData() {
   projectm_pcm_add_int16(projectm.pm, &pcm_data[0][0], 512, PROJECTM_STEREO);
 }
 
-
 /*
  *--------------------------------------------------------------------
  * ProjectM
@@ -130,27 +128,26 @@ void initProjectM() {
   } else {
     projectm_select_next_preset(projectm.pm, true);
   }
-  
+
   projectm_set_preset_switched_event_callback(projectm.pm, &presetSwitchedEvent,
                                               nullptr);
-  
+
   projectm_set_window_size(projectm.pm, settings._options.window_width,
                            settings._options.window_height);
 }
 
 void projectmRestart() {
-    printf("Restarting Instance!\n");
-    
-    projectm_destroy(projectm.pm);
-    
-    initSettings();
-    projectm.pm =
-      projectm_create_settings(&(projectm.settings), PROJECTM_FLAG_NONE);
-  
-    
-    initProjectM();
+  printf("Restarting Instance!\n");
 
-    sdl.limiter.TargetFPS(settings._options.fps);
+  projectm_destroy(projectm.pm);
+
+  initSettings();
+  projectm.pm =
+      projectm_create_settings(&(projectm.settings), PROJECTM_FLAG_NONE);
+
+  initProjectM();
+
+  sdl.limiter.TargetFPS(settings._options.fps);
 }
 
 /*
@@ -164,7 +161,7 @@ int projectmGetMeshX() {
   size_t *meshX;
   size_t *meshY;
   projectm_get_mesh_size(projectm.pm, meshX, meshY);
-  
+
   return *meshX;
 };
 void projectmSetMeshX(size_t mesh_x) {
@@ -177,7 +174,7 @@ int projectmGetMeshY() {
   size_t *meshX;
   size_t *meshY;
   projectm_get_mesh_size(projectm.pm, meshX, meshY);
-  
+
   return *meshY;
 };
 void projectmSetMeshY(size_t mesh_y) {
@@ -201,9 +198,7 @@ void projectmSetTextureSize(int texture_size) {
 }
 
 // PresetDuration
-int projectmGetPresetDuration() {
-  return settings._options.preset_duration;
-};
+int projectmGetPresetDuration() { return settings._options.preset_duration; };
 void projectmSetPresetDuration(double seconds) {
   settings._options.preset_duration = seconds;
   projectm_set_preset_duration(projectm.pm, seconds);
@@ -263,9 +258,7 @@ void projectmSetAspectCorrection(bool enabled) {
 };
 
 // EasterEgg
-float projectmGetEasterEgg() {
-  return projectm_get_easter_egg(projectm.pm);
-};
+float projectmGetEasterEgg() { return projectm_get_easter_egg(projectm.pm); };
 void projectmSetEasterEgg(float value) {
   settings._options.easter_egg = value;
   projectm_set_easter_egg(projectm.pm, value);
@@ -290,7 +283,7 @@ void projectmSetSoftCutRatingsEnabled(bool enabled) {
 
 // SendToastMessage
 void projectmSendToastMessage(int message) {
-  const char* messageStr = (const char*)message;
+  const char *messageStr = (const char *)message;
   projectm_set_toast_message(projectm.pm, messageStr);
 };
 
@@ -301,39 +294,44 @@ int projectmGetPlaylistSize() {
 
 // GetPresetIndex
 int projectmGetPresetIndex(int preset_name) {
-  const char* presetNameStr = (const char*)preset_name;
+  const char *presetNameStr = (const char *)preset_name;
   return projectm_get_preset_index(projectm.pm, presetNameStr);
 }
 
 // IsPresetActive
 int projectmIsPresetActive(unsigned int index) {
-  return projectm_get_selected_preset_index(projectm.pm, (unsigned int*)index);
+  return projectm_get_selected_preset_index(projectm.pm, (unsigned int *)index);
 }
 
 // GetPresetFilename
 int projectmGetPresetFilename(unsigned int index) {
-  const char* filename = projectm_get_preset_filename(projectm.pm, index);
+  const char *filename = projectm_get_preset_filename(projectm.pm, index);
   return (int)filename;
 }
 
 // GetPresetName
 int projectmGetPresetName(unsigned int index) {
-  const char* filename = projectm_get_preset_name(projectm.pm, index);
+  const char *filename = projectm_get_preset_name(projectm.pm, index);
   return (int)filename;
 }
 
 // // AddPresetFile
-// void projectmAddPresetFile(int preset_file_path, int preset_name, int rating_list, int rating_list_length) {
+// void projectmAddPresetFile(int preset_file_path, int preset_name, int
+// rating_list, int rating_list_length) {
 //   // const char* presetFilepathStr = (const char*)preset_file_path;
 //   // const char* presetNameStr = (const char*)preset_name;
-//   projectm_add_preset_url(projectm.pm, (const char*)preset_file_path, (const char*)preset_name, (int*)rating_list, (unsigned int)rating_list_length);
+//   projectm_add_preset_url(projectm.pm, (const char*)preset_file_path, (const
+//   char*)preset_name, (int*)rating_list, (unsigned int)rating_list_length);
 // }
 
 // // InsertPresetFile
-// void projectmInsertPresetFile(int preset_file_path, int preset_name, int rating_list, int rating_list_length) {
+// void projectmInsertPresetFile(int preset_file_path, int preset_name, int
+// rating_list, int rating_list_length) {
 //   // const char* presetFilepathStr = (const char*)preset_file_path;
 //   // const char* presetNameStr = (const char*)preset_name;
-//   projectm_insert_preset_url(projectm.pm, (const char*)preset_file_path, (const char*)preset_name, (int*)rating_list, (unsigned int)rating_list_length);
+//   projectm_insert_preset_url(projectm.pm, (const char*)preset_file_path,
+//   (const char*)preset_name, (int*)rating_list, (unsigned
+//   int)rating_list_length);
 // }
 
 // IsPresetPositionValid
@@ -342,9 +340,7 @@ int projectmIsPresetPositionValid() {
 }
 
 // ClearPresetPlaylist
-void projectmClearPresetPlaylist() {
-  projectm_clear_playlist(projectm.pm);
-}
+void projectmClearPresetPlaylist() { projectm_clear_playlist(projectm.pm); }
 
 // SelectPreviousPreset
 void projectmSelectPreviousPreset(bool hard_cut = false) {
@@ -362,9 +358,7 @@ void projectmSelectRandomPreset(bool hard_cut = false) {
 }
 
 // IsPresetLocked
-void projectmIsPresetLocked() {
-  projectm_is_preset_locked(projectm.pm);
-}
+void projectmIsPresetLocked() { projectm_is_preset_locked(projectm.pm); }
 
 // LockPreset
 void projectmLockPreset(bool lock = false) {
@@ -375,9 +369,11 @@ void projectmLockPreset(bool lock = false) {
 int projectmGetPresetRating(int index, int type) {
   int ratingType;
   if (type == 0) {
-    return projectm_get_preset_rating(projectm.pm, (unsigned int)index, PROJECTM_SOFT_CUT_RATING_TYPE);
+    return projectm_get_preset_rating(projectm.pm, (unsigned int)index,
+                                      PROJECTM_SOFT_CUT_RATING_TYPE);
   } else if (type == 1) {
-    return projectm_get_preset_rating(projectm.pm, (unsigned int)index, PROJECTM_HARD_CUT_RATING_TYPE);
+    return projectm_get_preset_rating(projectm.pm, (unsigned int)index,
+                                      PROJECTM_HARD_CUT_RATING_TYPE);
   }
 }
 
@@ -385,9 +381,11 @@ int projectmGetPresetRating(int index, int type) {
 void projectmSetPresetRating(int index, int rating, int type) {
   int ratingType;
   if (type == 0) {
-    projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating, PROJECTM_SOFT_CUT_RATING_TYPE);
+    projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating,
+                               PROJECTM_SOFT_CUT_RATING_TYPE);
   } else if (type == 1) {
-    projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating, PROJECTM_HARD_CUT_RATING_TYPE);
+    projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating,
+                               PROJECTM_HARD_CUT_RATING_TYPE);
   }
 }
 
@@ -416,13 +414,12 @@ int projectmGetErrorLoadingCurrentPreset() {
   return projectm_get_error_loading_current_preset(projectm.pm);
 }
 
-// 
+//
 /*
  *--------------------------------------------------------------------
  * SDL
  *--------------------------------------------------------------------
  */
-
 
 /*
  *--------------------------------------------------------------------
@@ -473,13 +470,13 @@ void renderLoop() {
 int main(int argc, char *argv[]) {
   // Init Settings
   initSettings();
-  
+
   // Init SDL
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
   // Init Emscripten Loop
   emscripten_set_main_loop(renderLoop, 0, 0);
-  
+
   sdl.window =
       SDL_CreateWindow("projectM", SDL_WINDOWPOS_UNDEFINED,
                        SDL_WINDOWPOS_UNDEFINED, settings._options.window_width,
@@ -496,13 +493,11 @@ int main(int argc, char *argv[]) {
   // Init ProjectM
   projectm.pm =
       projectm_create_settings(&(projectm.settings), PROJECTM_FLAG_NONE);
-  
+
   initProjectM();
-  
+
   // Set FPS
   sdl.limiter.TargetFPS(settings._options.fps);
-
-  
 
   return 0;
 }
@@ -519,24 +514,36 @@ EMSCRIPTEN_BINDINGS(avPluginProjectMLibrary) {
   emscripten::function("projectmSetTextureSize", &projectmSetTextureSize);
   emscripten::function("projectmGetPresetDuration", &projectmGetPresetDuration);
   emscripten::function("projectmSetPresetDuration", &projectmSetPresetDuration);
-  emscripten::function("projectmGetSoftCutDuration", &projectmGetSoftCutDuration);
-  emscripten::function("projectmSetSoftCutDuration", &projectmSetSoftCutDuration);
-  emscripten::function("projectmGetHardCutDuration", &projectmGetHardCutDuration);
-  emscripten::function("projectmSetHardCutDuration", &projectmSetHardCutDuration);
+  emscripten::function("projectmGetSoftCutDuration",
+                       &projectmGetSoftCutDuration);
+  emscripten::function("projectmSetSoftCutDuration",
+                       &projectmSetSoftCutDuration);
+  emscripten::function("projectmGetHardCutDuration",
+                       &projectmGetHardCutDuration);
+  emscripten::function("projectmSetHardCutDuration",
+                       &projectmSetHardCutDuration);
   emscripten::function("projectmGetHardCutEnabled", &projectmGetHardCutEnabled);
   emscripten::function("projectmSetHardCutEnabled", &projectmSetHardCutEnabled);
-  emscripten::function("projectmGetHardCutSensitivity", &projectmGetHardCutSensitivity);
-  emscripten::function("projectmSetHardCutSensitivity", &projectmSetHardCutSensitivity);
-  emscripten::function("projectmGetBeatSensitivity", &projectmGetBeatSensitivity);
-  emscripten::function("projectmSetBeatSensitivity", &projectmSetBeatSensitivity);
-  emscripten::function("projectmGetAspectCorrection", &projectmGetAspectCorrection);
-  emscripten::function("projectmSetAspectCorrection", &projectmSetAspectCorrection);
+  emscripten::function("projectmGetHardCutSensitivity",
+                       &projectmGetHardCutSensitivity);
+  emscripten::function("projectmSetHardCutSensitivity",
+                       &projectmSetHardCutSensitivity);
+  emscripten::function("projectmGetBeatSensitivity",
+                       &projectmGetBeatSensitivity);
+  emscripten::function("projectmSetBeatSensitivity",
+                       &projectmSetBeatSensitivity);
+  emscripten::function("projectmGetAspectCorrection",
+                       &projectmGetAspectCorrection);
+  emscripten::function("projectmSetAspectCorrection",
+                       &projectmSetAspectCorrection);
   emscripten::function("projectmGetEasterEgg", &projectmGetEasterEgg);
   emscripten::function("projectmSetEasterEgg", &projectmSetEasterEgg);
   emscripten::function("projectmGetShuffleEnabled", &projectmGetShuffleEnabled);
   emscripten::function("projectmSetShuffleEnabled", &projectmSetShuffleEnabled);
-  emscripten::function("projectmGetSoftCutRatingsEnabled", &projectmGetSoftCutRatingsEnabled);
-  emscripten::function("projectmSetSoftCutRatingsEnabled", &projectmSetSoftCutRatingsEnabled);
+  emscripten::function("projectmGetSoftCutRatingsEnabled",
+                       &projectmGetSoftCutRatingsEnabled);
+  emscripten::function("projectmSetSoftCutRatingsEnabled",
+                       &projectmSetSoftCutRatingsEnabled);
   emscripten::function("projectmSendToastMessage", &projectmSendToastMessage);
   emscripten::function("projectmGetPlaylistSize", &projectmGetPlaylistSize);
   emscripten::function("projectmGetPresetIndex", &projectmGetPresetIndex);
@@ -544,19 +551,27 @@ EMSCRIPTEN_BINDINGS(avPluginProjectMLibrary) {
   emscripten::function("projectmGetPresetFilename", &projectmGetPresetFilename);
   emscripten::function("projectmGetPresetName", &projectmGetPresetName);
   // emscripten::function("projectmAddPresetFile", &projectmAddPresetFile);
-  // emscripten::function("projectmInsertPresetFile", &projectmInsertPresetFile);
-  emscripten::function("projectmIsPresetPositionValid", &projectmIsPresetPositionValid);
-  emscripten::function("projectmClearPresetPlaylist", &projectmClearPresetPlaylist);
-  emscripten::function("projectmSelectPresetPosition", &projectmSelectPresetPosition);
+  // emscripten::function("projectmInsertPresetFile",
+  // &projectmInsertPresetFile);
+  emscripten::function("projectmIsPresetPositionValid",
+                       &projectmIsPresetPositionValid);
+  emscripten::function("projectmClearPresetPlaylist",
+                       &projectmClearPresetPlaylist);
+  emscripten::function("projectmSelectPresetPosition",
+                       &projectmSelectPresetPosition);
   emscripten::function("projectmSelectPreset", &projectmSelectPreset);
   emscripten::function("projectmRemovePreset", &projectmRemovePreset);
-  emscripten::function("projectmSelectPreviousPreset", &projectmSelectPreviousPreset);
+  emscripten::function("projectmSelectPreviousPreset",
+                       &projectmSelectPreviousPreset);
   emscripten::function("projectmSelectNextPreset", &projectmSelectNextPreset);
-  emscripten::function("projectmSelectRandomPreset", &projectmSelectRandomPreset);
+  emscripten::function("projectmSelectRandomPreset",
+                       &projectmSelectRandomPreset);
   emscripten::function("projectmIsPresetLocked", &projectmIsPresetLocked);
   emscripten::function("projectmLockPreset", &projectmLockPreset);
   emscripten::function("projectmGetPresetRating", &projectmGetPresetRating);
   emscripten::function("projectmSetPresetRating", &projectmSetPresetRating);
-  emscripten::function("projectmPopulatePresetMenu", &projectmPopulatePresetMenu);
-  emscripten::function("projectmGetErrorLoadingCurrentPreset", &projectmGetErrorLoadingCurrentPreset);
+  emscripten::function("projectmPopulatePresetMenu",
+                       &projectmPopulatePresetMenu);
+  emscripten::function("projectmGetErrorLoadingCurrentPreset",
+                       &projectmGetErrorLoadingCurrentPreset);
 };
