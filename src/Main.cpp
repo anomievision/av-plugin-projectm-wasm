@@ -502,7 +502,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-EMSCRIPTEN_BINDINGS(avPluginProjectMLibrary) {
+EMSCRIPTEN_BINDINGS(avPluginProjectMWASM) {
   emscripten::function("projectmRestart", &projectmRestart);
   emscripten::function("projectmGetMeshX", &projectmGetMeshX);
   emscripten::function("projectmSetMeshX", &projectmSetMeshX);

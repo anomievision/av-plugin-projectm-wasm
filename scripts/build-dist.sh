@@ -15,7 +15,7 @@ LIBPROJECTM_INSTALL_PREFIX="$HOME/install/projectm"
 
 # Clean generated project files
 cleanProject() {
-    rm -rf ${DIST}/avPluginProjectMLibrary.*
+    rm -rf ${DIST}/avPluginProjectMWASM.*
     rm -rf ${BUILD}
 }
 
@@ -35,7 +35,7 @@ buildProject() {
 
     cd $ROOT
     mkdir -p ${DIST}
-    cp ${BUILD}/avPluginProjectMLibrary.* ${DIST}
+    cp ${BUILD}/avPluginProjectMWASM.* ${DIST}
 
     rm -rf ${BUILD}
 }
