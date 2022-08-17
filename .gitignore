@@ -2,3 +2,4 @@ build
 doxygen
 presets/data
 presets/packs
+dist
