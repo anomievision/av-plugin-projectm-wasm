@@ -6,12 +6,12 @@ ROOT=$(pwd)
 SRC="${ROOT}/src"
 BUILD="${ROOT}/build"
 BUILD_TYPE="DEBUG"
-EMSDK_TOOLCHAIN_FILE="$HOME/install/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+EMSDK_TOOLCHAIN_FILE="$HOME/.install/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
 CMAKE_INSTALL_PREFIX=$LIBPROJECTM_INSTALL_PREFIX;$POCO_INSTALL_PREFIX
 
 
-LIBPROJECTM_DIR="/home/blaque/install/projectm/lib/cmake/libprojectM"
-LIBPROJECTM_INSTALL_PREFIX="$HOME/install/projectm"
+LIBPROJECTM_DIR="$HOME/.install/projectm/lib/cmake/libprojectM"
+LIBPROJECTM_INSTALL_PREFIX="$HOME/.install/projectm"
 
 # Clean generated project files
 cleanProject() {
