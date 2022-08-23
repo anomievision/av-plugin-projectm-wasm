@@ -25,3 +25,7 @@ Module['printErr'] = function (text) {
     console.error("avPluginProjectM => " + text);
 };
 
+Module['locateFile'] = function() {
+    return Module['wasmFilePath'];
+}
+
