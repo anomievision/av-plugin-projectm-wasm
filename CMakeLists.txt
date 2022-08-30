@@ -53,7 +53,7 @@ target_link_options(avPluginProjectMWASM
         "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/templates/shell_minimal.html"
         "SHELL:--pre-js ${CMAKE_SOURCE_DIR}/js/pre-js.js"
         # "SHELL:-s INCOMING_MODULE_JS_API=[]"
-        # "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/presets@/presets"
+        # "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/presets/mischa@/presets"
         )
 
 message(STATUS "")

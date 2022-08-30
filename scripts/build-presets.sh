@@ -45,9 +45,9 @@ modifyJsFiles() {
 
 generatePreJs() {
     rm ${JS}/pre-js.js
-    cat "${JS}/pre-js/pre.js" >> "${JS}/pre-js.js" 
+    cat "${JS}/presets/pre.js" >> "${JS}/pre-js.js" 
     find ${OUTPUT_DIR} -type f -name '*.js' -exec cat {} + >> "${JS}/pre-js.js"
-    cat "${JS}/pre-js/post.js" >> "${JS}/pre-js.js" 
+    cat "${JS}/presets/post.js" >> "${JS}/pre-js.js" 
 }
 
 copyDataToDist(){

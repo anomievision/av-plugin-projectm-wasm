@@ -7,7 +7,7 @@
 #include "FPSLimiter.h"
 #include "Settings.h"
 
-#include <GL/gl.h>
+#include <GLES2/gl2.h>
 #include <SDL.h>
 #include <emscripten.h>
 #include <emscripten/bind.h>
@@ -19,12 +19,14 @@
  *--------------------------------------------------------------------
  */
 
-struct ProjectM {
+struct ProjectM
+{
   projectm_handle pm{nullptr};
   projectm_settings settings;
 } projectm;
 
-struct SDL {
+struct SDL
+{
   SDL_Window *window{nullptr};
   SDL_Renderer *renderer{nullptr};
 
@@ -55,7 +57,8 @@ EM_JS(int, getCanvasHeight, (), { return canvas.height; });
 
 Settings settings;
 
-void initSettings() {
+void initSettings()
+{
   projectm.settings.mesh_x = settings._options.mesh_x;
   projectm.settings.mesh_y = settings._options.mesh_y;
   projectm.settings.fps = settings._options.fps;
@@ -85,10 +88,12 @@ void initSettings() {
  *--------------------------------------------------------------------
  */
 
-void generateRandomAudioData() {
+void generateRandomAudioData()
+{
   short pcm_data[2][512];
 
-  for (int i = 0; i < 512; i++) {
+  for (int i = 0; i < 512; i++)
+  {
     pcm_data[0][i] =
         static_cast<short>((static_cast<double>(rand()) /
                             (static_cast<double>(RAND_MAX)) * (pow(2, 14))));
@@ -96,7 +101,8 @@ void generateRandomAudioData() {
         static_cast<short>((static_cast<double>(rand()) /
                             (static_cast<double>(RAND_MAX)) * (pow(2, 14))));
 
-    if (i % 2 == 1) {
+    if (i % 2 == 1)
+    {
       pcm_data[0][i] = -pcm_data[0][i];
       pcm_data[1][i] = -pcm_data[1][i];
     }
@@ -111,7 +117,8 @@ void generateRandomAudioData() {
  *--------------------------------------------------------------------
  */
 
-void presetSwitchedEvent(bool isHardCut, unsigned int index, void *context) {
+void presetSwitchedEvent(bool isHardCut, unsigned int index, void *context)
+{
   auto presetName = projectm_get_preset_name(projectm.pm, index);
   SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Displaying preset: %s\n",
               presetName);
@@ -122,10 +129,14 @@ void presetSwitchedEvent(bool isHardCut, unsigned int index, void *context) {
   SDL_SetWindowTitle(sdl.window, newTitle.c_str());
 }
 
-void initProjectM() {
-  if (settings._options.shuffle_enabled) {
+void initProjectM()
+{
+  if (settings._options.shuffle_enabled)
+  {
     projectm_select_random_preset(projectm.pm, true);
-  } else {
+  }
+  else
+  {
     projectm_select_next_preset(projectm.pm, true);
   }
 
@@ -136,7 +147,8 @@ void initProjectM() {
                            settings._options.window_height);
 }
 
-void projectmRestart() {
+void projectmRestart()
+{
   printf("Restarting Instance!\n");
 
   projectm_destroy(projectm.pm);
@@ -157,27 +169,31 @@ void projectmRestart() {
  */
 
 // MeshX
-int projectmGetMeshX() {
+int projectmGetMeshX()
+{
   size_t *meshX;
   size_t *meshY;
   projectm_get_mesh_size(projectm.pm, meshX, meshY);
 
   return *meshX;
 };
-void projectmSetMeshX(size_t mesh_x) {
+void projectmSetMeshX(size_t mesh_x)
+{
   settings._options.mesh_x = mesh_x;
   projectm_set_mesh_size(projectm.pm, mesh_x, settings._options.mesh_y);
 };
 
 // MeshY
-int projectmGetMeshY() {
+int projectmGetMeshY()
+{
   size_t *meshX;
   size_t *meshY;
   projectm_get_mesh_size(projectm.pm, meshX, meshY);
 
   return *meshY;
 };
-void projectmSetMeshY(size_t mesh_y) {
+void projectmSetMeshY(size_t mesh_y)
+{
   settings._options.mesh_y = mesh_y;
   projectm_set_mesh_size(projectm.pm, settings._options.mesh_x, mesh_y);
 };
@@ -185,132 +201,158 @@ void projectmSetMeshY(size_t mesh_y) {
 // FPS
 int projectmGetFps() { return projectm_get_fps(projectm.pm); };
 
-void projectmSetFps(int fps) {
+void projectmSetFps(int fps)
+{
   settings._options.fps = fps;
   projectm.settings.fps = settings._options.fps;
 }
 
 // TextureSize
 int projectmGetTextureSize() { return projectm_get_texture_size(projectm.pm); };
-void projectmSetTextureSize(int texture_size) {
+void projectmSetTextureSize(int texture_size)
+{
   settings._options.texture_size = texture_size;
   projectm_set_texture_size(projectm.pm, texture_size);
 }
 
 // PresetDuration
 int projectmGetPresetDuration() { return settings._options.preset_duration; };
-void projectmSetPresetDuration(double seconds) {
+void projectmSetPresetDuration(double seconds)
+{
   settings._options.preset_duration = seconds;
   projectm_set_preset_duration(projectm.pm, seconds);
 };
 
 // SoftCutDuration
-int projectmGetSoftCutDuration() {
+int projectmGetSoftCutDuration()
+{
   return projectm_get_soft_cut_duration(projectm.pm);
 };
-void projectmSetSoftCutDuration(double seconds) {
+void projectmSetSoftCutDuration(double seconds)
+{
   settings._options.soft_cut_duration = seconds;
   projectm_set_soft_cut_duration(projectm.pm, seconds);
 };
 
 // HardCutDuration
-int projectmGetHardCutDuration() {
+int projectmGetHardCutDuration()
+{
   return projectm_get_hard_cut_duration(projectm.pm);
 };
-void projectmSetHardCutDuration(double seconds) {
+void projectmSetHardCutDuration(double seconds)
+{
   settings._options.hard_cut_duration = seconds;
   projectm_set_hard_cut_duration(projectm.pm, seconds);
 };
 
 // HardCutEnabled
-int projectmGetHardCutEnabled() {
+int projectmGetHardCutEnabled()
+{
   return projectm_get_hard_cut_enabled(projectm.pm);
 };
-void projectmSetHardCutEnabled(bool enabled) {
+void projectmSetHardCutEnabled(bool enabled)
+{
   settings._options.hard_cut_enabled = enabled;
   projectm_set_hard_cut_enabled(projectm.pm, enabled);
 };
 
 // HardCutSensitivity
-float projectmGetHardCutSensitivity() {
+float projectmGetHardCutSensitivity()
+{
   return projectm_get_hard_cut_sensitivity(projectm.pm);
 };
-void projectmSetHardCutSensitivity(float sensitivity) {
+void projectmSetHardCutSensitivity(float sensitivity)
+{
   settings._options.hard_cut_sensitivity = sensitivity;
   projectm_set_hard_cut_sensitivity(projectm.pm, sensitivity);
 };
 
 // BeatSensitivity
-float projectmGetBeatSensitivity() {
+float projectmGetBeatSensitivity()
+{
   return settings._options.beat_sensitivity;
 };
-void projectmSetBeatSensitivity(float sensitivity) {
+void projectmSetBeatSensitivity(float sensitivity)
+{
   settings._options.beat_sensitivity = sensitivity;
 };
 
 // AspectCorrection
-int projectmGetAspectCorrection() {
+int projectmGetAspectCorrection()
+{
   return projectm_get_aspect_correction(projectm.pm);
 };
-void projectmSetAspectCorrection(bool enabled) {
+void projectmSetAspectCorrection(bool enabled)
+{
   settings._options.aspect_correction = enabled;
   projectm_set_aspect_correction(projectm.pm, enabled);
 };
 
 // EasterEgg
 float projectmGetEasterEgg() { return projectm_get_easter_egg(projectm.pm); };
-void projectmSetEasterEgg(float value) {
+void projectmSetEasterEgg(float value)
+{
   settings._options.easter_egg = value;
   projectm_set_easter_egg(projectm.pm, value);
 };
 
 // ShuffleEnabled
-int projectmGetShuffleEnabled() {
+int projectmGetShuffleEnabled()
+{
   return projectm_get_shuffle_enabled(projectm.pm);
 };
-void projectmSetShuffleEnabled(bool enabled) {
+void projectmSetShuffleEnabled(bool enabled)
+{
   settings._options.shuffle_enabled = enabled;
   projectm_set_shuffle_enabled(projectm.pm, enabled);
 };
 
 // SoftCutRatingsEnabled
-int projectmGetSoftCutRatingsEnabled() {
+int projectmGetSoftCutRatingsEnabled()
+{
   return settings._options.soft_cut_ratings_enabled;
 };
-void projectmSetSoftCutRatingsEnabled(bool enabled) {
+void projectmSetSoftCutRatingsEnabled(bool enabled)
+{
   settings._options.soft_cut_ratings_enabled = enabled;
 };
 
 // SendToastMessage
-void projectmSendToastMessage(int message) {
+void projectmSendToastMessage(int message)
+{
   const char *messageStr = (const char *)message;
   projectm_set_toast_message(projectm.pm, messageStr);
 };
 
 // GetPlaylistSize
-int projectmGetPlaylistSize() {
+int projectmGetPlaylistSize()
+{
   return projectm_get_playlist_size(projectm.pm);
 }
 
 // GetPresetIndex
-int projectmGetPresetIndex(int preset_name) {
+int projectmGetPresetIndex(int preset_name)
+{
   const char *presetNameStr = (const char *)preset_name;
   return projectm_get_preset_index(projectm.pm, presetNameStr);
 }
 
 // IsPresetActive
-int projectmIsPresetActive(unsigned int index) {
+int projectmIsPresetActive(unsigned int index)
+{
   return projectm_get_selected_preset_index(projectm.pm, (unsigned int *)index);
 }
 
 // GetPresetFilename
-int projectmGetPresetFilename(unsigned int index) {
+int projectmGetPresetFilename(unsigned int index)
+{
   const char *filename = projectm_get_preset_filename(projectm.pm, index);
   return (int)filename;
 }
 
 // GetPresetName
-int projectmGetPresetName(unsigned int index) {
+int projectmGetPresetName(unsigned int index)
+{
   const char *filename = projectm_get_preset_name(projectm.pm, index);
   return (int)filename;
 }
@@ -335,7 +377,8 @@ int projectmGetPresetName(unsigned int index) {
 // }
 
 // IsPresetPositionValid
-int projectmIsPresetPositionValid() {
+int projectmIsPresetPositionValid()
+{
   return projectm_preset_position_valid(projectm.pm);
 }
 
@@ -343,17 +386,20 @@ int projectmIsPresetPositionValid() {
 void projectmClearPresetPlaylist() { projectm_clear_playlist(projectm.pm); }
 
 // SelectPreviousPreset
-void projectmSelectPreviousPreset(bool hard_cut = false) {
+void projectmSelectPreviousPreset(bool hard_cut = false)
+{
   projectm_select_previous_preset(projectm.pm, hard_cut);
 }
 
 // SelectNextPreset
-void projectmSelectNextPreset(bool hard_cut = false) {
+void projectmSelectNextPreset(bool hard_cut = false)
+{
   projectm_select_next_preset(projectm.pm, hard_cut);
 }
 
 // SelectRandomPreset
-void projectmSelectRandomPreset(bool hard_cut = false) {
+void projectmSelectRandomPreset(bool hard_cut = false)
+{
   projectm_select_random_preset(projectm.pm, hard_cut);
 }
 
@@ -361,56 +407,70 @@ void projectmSelectRandomPreset(bool hard_cut = false) {
 void projectmIsPresetLocked() { projectm_is_preset_locked(projectm.pm); }
 
 // LockPreset
-void projectmLockPreset(bool lock = false) {
+void projectmLockPreset(bool lock = false)
+{
   projectm_lock_preset(projectm.pm, lock);
 }
 
 // GetPresetRating
-int projectmGetPresetRating(int index, int type) {
+int projectmGetPresetRating(int index, int type)
+{
   int ratingType;
-  if (type == 0) {
+  if (type == 0)
+  {
     return projectm_get_preset_rating(projectm.pm, (unsigned int)index,
                                       PROJECTM_SOFT_CUT_RATING_TYPE);
-  } else if (type == 1) {
+  }
+  else if (type == 1)
+  {
     return projectm_get_preset_rating(projectm.pm, (unsigned int)index,
                                       PROJECTM_HARD_CUT_RATING_TYPE);
   }
 }
 
 // SetPresetRating
-void projectmSetPresetRating(int index, int rating, int type) {
+void projectmSetPresetRating(int index, int rating, int type)
+{
   int ratingType;
-  if (type == 0) {
+  if (type == 0)
+  {
     projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating,
                                PROJECTM_SOFT_CUT_RATING_TYPE);
-  } else if (type == 1) {
+  }
+  else if (type == 1)
+  {
     projectm_set_preset_rating(projectm.pm, (unsigned int)index, rating,
                                PROJECTM_HARD_CUT_RATING_TYPE);
   }
 }
 
 // SelectPresetPosition
-void projectmSelectPresetPosition(int index) {
+void projectmSelectPresetPosition(int index)
+{
   projectm_select_preset_position(projectm.pm, (unsigned int)index);
 }
 
 // SelectPreset
-void projectmSelectPreset(int index, bool hard_cut = false) {
+void projectmSelectPreset(int index, bool hard_cut = false)
+{
   projectm_select_preset(projectm.pm, (unsigned int)index, hard_cut);
 }
 
 // RemovePreset
-void projectmRemovePreset(int index) {
+void projectmRemovePreset(int index)
+{
   projectm_remove_preset(projectm.pm, (unsigned int)index);
 }
 
 // PopulatePresetMenu
-void projectmPopulatePresetMenu() {
+void projectmPopulatePresetMenu()
+{
   projectm_populate_preset_menu(projectm.pm);
 }
 
 // GetErrorLoadingCurrentPreset
-int projectmGetErrorLoadingCurrentPreset() {
+int projectmGetErrorLoadingCurrentPreset()
+{
   return projectm_get_error_loading_current_preset(projectm.pm);
 }
 
@@ -427,26 +487,30 @@ int projectmGetErrorLoadingCurrentPreset() {
  *--------------------------------------------------------------------
  */
 
-void checkViewportSize() {
+void checkViewportSize()
+{
   int renderWidth = getCanvasWidth();
   int renderHeight = getCanvasHeight();
 
   if (renderWidth != settings._options.window_width ||
-      renderHeight != settings._options.window_height) {
+      renderHeight != settings._options.window_height)
+  {
     projectm_set_window_size(projectm.pm, renderWidth, renderHeight);
     settings._options.window_width = renderWidth;
     settings._options.window_height = renderHeight;
   }
 }
 
-void renderLoop() {
+void renderLoop()
+{
   sdl.limiter.StartFrame();
 
   checkViewportSize();
 
   // _audioCapture.FillBuffer();
 
-  if (sdl.audioChannelsCount > 2 || sdl.audioChannelsCount < 1) {
+  if (sdl.audioChannelsCount > 2 || sdl.audioChannelsCount < 1)
+  {
     generateRandomAudioData();
   }
 
@@ -467,7 +531,8 @@ void renderLoop() {
  *--------------------------------------------------------------------
  */
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   // Init Settings
   initSettings();
 
@@ -485,7 +550,8 @@ int main(int argc, char *argv[]) {
   sdl.renderer = SDL_CreateRenderer(
       sdl.window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-  if (!sdl.renderer) {
+  if (!sdl.renderer)
+  {
     fprintf(stderr, "Failed to create renderer: %s\n", SDL_GetError());
     return 1;
   }
@@ -502,7 +568,8 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-EMSCRIPTEN_BINDINGS(avPluginProjectMWASM) {
+EMSCRIPTEN_BINDINGS(avPluginProjectMWASM)
+{
   emscripten::function("projectmRestart", &projectmRestart);
   emscripten::function("projectmGetMeshX", &projectmGetMeshX);
   emscripten::function("projectmSetMeshX", &projectmSetMeshX);
